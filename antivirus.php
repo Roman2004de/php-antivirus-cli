@@ -80,8 +80,15 @@ class Antivirus {
                     }
 
                     if ($line !== '') {
+
+                        if (@preg_match($line, '') === false) {
+                            $this->log("Invalid signature skipped: {$line}", true);
+                            continue;
+                        }
+
                         $this->virusSignatures[] = $line;
                     }
+
                 }
             } catch (Exception $e) {
                 $this->log("Error loading virus signatures: " . $e->getMessage(), true);
