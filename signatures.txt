@@ -1,0 +1,109 @@
+﻿# ==========================================
+# PHP Antivirus External Signatures Database
+# ==========================================
+# Формат:
+# одна PCRE-сигнатура на строку
+# строки начинающиеся с # игнорируются
+#
+# Пример:
+# /\beval\s*\(/i
+#
+# ==========================================
+
+
+# ---------- Dynamic code execution ----------
+
+/\beval\s*\(/i
+/\bassert\s*\(/i
+/\bcreate_function\s*\(/i
+/\bcall_user_func(?:_array)?\s*\(/i
+
+
+# ---------- Obfuscation ----------
+
+/\bbase64_decode\s*\(/i
+/\bgzinflate\s*\(/i
+/\bgzuncompress\s*\(/i
+/\bstr_rot13\s*\(/i
+/\bpack\s*\(\s*["']H\*["']/i
+
+
+# ---------- Remote code execution ----------
+
+/\bshell_exec\s*\(/i
+/\bexec\s*\(/i
+/\bsystem\s*\(/i
+/\bpassthru\s*\(/i
+/\bproc_open\s*\(/i
+/\bpopen\s*\(/i
+/\bpcntl_exec\s*\(/i
+
+
+# ---------- File write operations ----------
+
+/\bfile_put_contents\s*\(/i
+/\bfopen\s*\([^)]*,\s*["'][wa]\+?["']/i
+/\bfwrite\s*\(/i
+
+
+# ---------- Suspicious uploads ----------
+
+/\bmove_uploaded_file\s*\(/i
+/\$_FILES\s*\[/i
+
+
+# ---------- Network activity ----------
+
+/\bcurl_exec\s*\(/i
+/\bcurl_multi_exec\s*\(/i
+/\bfsockopen\s*\(/i
+/\bstream_socket_client\s*\(/i
+
+
+# ---------- PHP wrappers ----------
+
+/php:\/\/input/i
+/php:\/\/filter/i
+
+
+# ---------- Dangerous include ----------
+
+/\binclude\s*\(\s*\$_(?:GET|POST|REQUEST|COOKIE)/i
+/\brequire\s*\(\s*\$_(?:GET|POST|REQUEST|COOKIE)/i
+
+
+# ---------- Web shell indicators ----------
+
+/c99shell/i
+/r57shell/i
+/web\s*shell/i
+/filesman/i
+/wso\s*\d/i
+
+
+# ---------- Encoded payload ----------
+
+/fromCharCode\s*\(/i
+/unescape\s*\(/i
+/atob\s*\(/i
+
+
+# ---------- Suspicious HTML ----------
+
+/<\s*iframe\b/i
+/<\s*object\b/i
+/<\s*embed\b/i
+
+
+# ---------- Phishing indicators ----------
+
+/paypal/i
+/crypto\s*wallet/i
+/seed\s*phrase/i
+/metamask/i
+/binance/i
+
+
+# ---------- Old dangerous PHP ----------
+
+/preg_replace\s*\(.*\/e[\'"]/i

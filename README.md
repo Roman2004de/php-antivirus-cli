@@ -116,7 +116,7 @@ php antivirus.php \
 ```bash
 php antivirus.php \
   --path=/var/www/html \
-  --signatures-file=/opt/php-antivirus/signatures.txt
+  --signatures-file=./signatures.txt
 ```
 
 ---
