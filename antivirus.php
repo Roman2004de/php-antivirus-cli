@@ -57,7 +57,32 @@ class Antivirus {
     private function loadSignatures() {
         if (!empty($this->signaturesFile) && file_exists($this->signaturesFile)) {
             try {
-                $this->virusSignatures = array_map('trim', file($this->signaturesFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES));
+                $lines = file($this->signaturesFile, FILE_IGNORE_NEW_LINES);
+                $this->virusSignatures = [];
+
+                foreach ($lines as $line) {
+                    $line = trim($line);
+
+                    // Skip empty lines
+                    if ($line === '') {
+                        continue;
+                    }
+
+                    // Skip comment lines
+                    if (strpos($line, '#') === 0) {
+                        continue;
+                    }
+
+                    // Skip inline comments like:
+                    // /\beval\s*\(/i # dangerous dynamic execution
+                    if (($commentPos = strpos($line, ' #')) !== false) {
+                        $line = trim(substr($line, 0, $commentPos));
+                    }
+
+                    if ($line !== '') {
+                        $this->virusSignatures[] = $line;
+                    }
+                }
             } catch (Exception $e) {
                 $this->log("Error loading virus signatures: " . $e->getMessage(), true);
             }
